@@ -17,10 +17,15 @@ import tempfile
 import torch
 
 # Download required NLTK data
+# Add the local nltk_data folder to NLTK's search path
+nltk_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
+nltk.data.path.append(nltk_path)
+
+# Download only if missing (won't usually run on Streamlit)
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download('punkt', quiet=True)
+    nltk.download('punkt', download_dir=nltk_path, quiet=True)
 
 # --- App Configuration ---
 st.set_page_config(
