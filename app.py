@@ -17,15 +17,23 @@ import tempfile
 import torch
 
 # Download required NLTK data
+# Download required NLTK data with updated tokenizer names
 # Add the local nltk_data folder to NLTK's search path
 nltk_path = os.path.join(os.path.dirname(__file__), 'nltk_data')
 nltk.data.path.append(nltk_path)
 
-# Download only if missing (won't usually run on Streamlit)
+# Download punkt_tab (new tokenizer) if missing
 try:
-    nltk.data.find('tokenizers/punkt')
+    nltk.data.find('tokenizers/punkt_tab')
 except LookupError:
-    nltk.download('punkt', download_dir=nltk_path, quiet=True)
+    try:
+        nltk.download('punkt_tab', download_dir=nltk_path, quiet=True)
+    except:
+        # Fallback to older punkt if punkt_tab fails
+        try:
+            nltk.download('punkt', download_dir=nltk_path, quiet=True)
+        except:
+            pass
 
 # --- App Configuration ---
 st.set_page_config(
